@@ -2,6 +2,7 @@ from sqlconn.mysqlconn import MySQLConn
 from scrapeclass.lifehackerscrape import LifeHackerScrape
 from scrapeclass.toeicscrape import ToeicScrape
 from scrapeclass.yahooscrape import YahooScrape
+from linebot import LineBotApi
 
 account = {
     "db": "webapp",
@@ -28,10 +29,15 @@ LIFEHACK = 3
 # 波田のテスト用LINE ID
 LINE_TEST_ID = "Uf4910c7b2fb5ea0275dc87660fd07c37"
 
+# LINEに接続する。
+LINE = LineBotApi(channel_access_token=ACCESS_TOKEN)
+
 with MySQLConn(account) as connect:
     cursor = connect.cursor(dictionary=True)
 
     for url_id in range(1, WEB_SITE_N + 1):
+
+        # url_idごとにユーザーのリストを取得する。
         cursor.execute(USER_QUERY % url_id)
         user_list = cursor.fetchall()
 
@@ -39,23 +45,26 @@ with MySQLConn(account) as connect:
         if(len(user_list) == 0):
             continue
 
+        # サイトをスクレイピングする情報を取得する。
         cursor.execute(URL_QUERY % url_id)
         scrape_data = cursor.fetchone()
 
         # idによって呼び出すクラスを切り替える。
         if(url_id == YAHOO):
             print("1")
-            SC = YahooScrape(user_list, ACCESS_TOKEN, scrape_data)
+            SC = YahooScrape(scrape_data)
         elif(url_id == TOEIC):
             continue
             print("2")
-            SC = ToeicScrape(user_list, ACCESS_TOKEN, scrape_data)
+            SC = ToeicScrape(scrape_data)
         elif(url_id == LIFEHACK):
             print("3")
-            SC = LifeHackerScrape(user_list, ACCESS_TOKEN, scrape_data)
+            SC = LifeHackerScrape(scrape_data)
 
         # 各サイトからスクレイピングを行いLINEに情報を送信する。
         SC.scrapeWeb()
-        SC.sendToLine()
+        send_message = SC.sendToLine()
+        for user in user_list:
+            line.push_message(to=user["line_id"], messages=send_message)
 
     cursor.close()

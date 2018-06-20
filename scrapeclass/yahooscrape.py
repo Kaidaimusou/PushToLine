@@ -1,7 +1,6 @@
 from scrapeclass.scrapeclass import ScrapeClass
 from bs4 import BeautifulSoup as bs
 import requests
-from linebot import LineBotApi
 from linebot.models import (
     TemplateSendMessage, ButtonsTemplate, URITemplateAction
 )
@@ -11,13 +10,13 @@ class YahooScrape(ScrapeClass):
     continue_sel = ".newsLink"
     figure_url_sel = "div.thumb img"
 
-    def __init__(self, user_list, access_token, selector):
-        super().__init__(user_list, access_token, selector)
+    def __init__(self, scrape_data):
+        super().__init__(scrape_data)
 
     # LINEに送信する情報を取得する
     def scrapeWeb(self):
         got_url = self.soup_one.select_one(self.url_sel).attrs["href"]
-        
+
         res_two = requests.get(got_url)
         soup_two = bs(res_two.content, "html.parser")
 
@@ -31,15 +30,15 @@ class YahooScrape(ScrapeClass):
         self.title = soup_three.select_one("h1").text
         self.content = soup_three.select_one("p.ynDetailText").text
 
-    # LINEに情報を送信する。
-    def sendToLine(self):
+    # LINEに送信する情報を成形する。
+    def returnSendMessage(self):
         button_message = TemplateSendMessage(
-            alt_text=self.title[:37] + "...",
-            template=ButtonsTemplate(
+            alt_text = self.title[:37] + "...",
+            template = ButtonsTemplate(
                 thumbnail_image_url=self.figure_url,
-                title=self.title[:37] + "...",
-                text=self.content[:57] + "...",
-                actions=[
+                title = self.title[:37] + "...",
+                text = self.content[:57] + "...",
+                actions = [
                     URITemplateAction(
                         label='記事を見る',
                         uri=self.got_page_url
@@ -47,5 +46,5 @@ class YahooScrape(ScrapeClass):
                 ]
             )
         )
-        for user in self.user_list:
-            self.line.push_message(to=user["line_id"], messages=button_message)
+
+        return button_message
