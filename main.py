@@ -1,3 +1,5 @@
+import os
+from dotenv import load_dotenv
 from sqlconn.mysqlconn import MySQLConn
 from scrapeclass.lifehackerscrape import LifeHackerScrape
 from scrapeclass.toeicscrape import ToeicScrape
@@ -15,7 +17,8 @@ account = {
 WEB_SITE_N = 3
 
 # LINEのMessaging APIに接続するためのチャンネルアクセストークン
-ACCESS_TOKEN = "0GKT3HsJjvy59nx185ZwloyKRx7+FvvUBpCZ+zfm78KNGzas+pZT//FJblg965j4GRUB8kA8FGkdaQFYAMqM+340xSRFTfcOoWbrLi5xRVoWIn86LJEKfLaW6V+NQFKk0i1VSh0VnzOa9Re7I4I6xAdB04t89/1O/w1cDnyilFU="
+load_dotenv("./.env")
+ACCESS_TOKEN = os.environ.get("ACCESS_TOKEN")
 
 # url, userの情報を取得するためのqueryのテンプレート
 URL_QUERY = "SELECT * FROM url WHERE id = %d"
@@ -25,9 +28,6 @@ USER_QUERY = "SELECT * FROM user WHERE url_id = %d"
 YAHOO = 1
 TOEIC = 2
 LIFEHACK = 3
-
-# 波田のテスト用LINE ID
-LINE_TEST_ID = "Uf4910c7b2fb5ea0275dc87660fd07c37"
 
 # LINEに接続する。
 LINE = LineBotApi(channel_access_token=ACCESS_TOKEN)
