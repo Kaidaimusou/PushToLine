@@ -7,7 +7,7 @@ from linebot.models import TextSendMessage
 # TOEIC日替わり問題を送信するためのクラス
 class ToeicScrape(ScrapeClass):
 
-    def __init__(self, user_list, access_token, scrape_data):
+    def __init__(self, scrape_data):
        super().__init__(scrape_data)
 
     # LINEに送信する情報を取得する
@@ -15,12 +15,12 @@ class ToeicScrape(ScrapeClass):
         self.title = self.soup_one.select_one(self.title_sel).text
         content = self.soup_one.select_one(self.contents_sel).text
         self.content = content[:content.find("あなたの答え") - 4] +\
-             content[content.find("正解：")]
+             "\n\n\n\n\n" + content[content.find("正解："):]
 
     # LINEに送信する情報を成形する。
     def returnSendMessage(self):
         text_message = TextSendMessage(
-            text = self.title + self.content
+            text = self.title + "\n" + self.content
         )
 
         return text_message

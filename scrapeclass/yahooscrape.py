@@ -1,9 +1,6 @@
 from scrapeclass.scrapeclass import ScrapeClass
 from bs4 import BeautifulSoup as bs
 import requests
-from linebot.models import (
-    TemplateSendMessage, ButtonsTemplate, URITemplateAction
-)
 
 # YahooNewsの情報を送信するクラス
 class YahooScrape(ScrapeClass):
@@ -25,26 +22,13 @@ class YahooScrape(ScrapeClass):
             print(self.got_page_url)
             res_three = requests.get(self.got_page_url)
             soup_three = bs(res_three.content, "html.parser")
+        else:
+            soup_three = soup_two
 
-        self.figure_url = soup_three.select_one(self.figure_url_sel).attrs['src']
+        try:
+            self.figure_url = soup_three.select_one(self.figure_url_sel).attrs['src']
+        except AttributeError:
+            self.figure_url = None
+
         self.title = soup_three.select_one("h1").text
         self.content = soup_three.select_one("p.ynDetailText").text
-
-    # LINEに送信する情報を成形する。
-    def returnSendMessage(self):
-        button_message = TemplateSendMessage(
-            alt_text = self.title[:37] + "...",
-            template = ButtonsTemplate(
-                thumbnail_image_url=self.figure_url,
-                title = self.title[:37] + "...",
-                text = self.content[:57] + "...",
-                actions = [
-                    URITemplateAction(
-                        label='記事を見る',
-                        uri=self.got_page_url
-                    )
-                ]
-            )
-        )
-
-        return button_message

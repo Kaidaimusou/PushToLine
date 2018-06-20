@@ -54,7 +54,6 @@ with MySQLConn(account) as connect:
             print("1")
             SC = YahooScrape(scrape_data)
         elif(url_id == TOEIC):
-            continue
             print("2")
             SC = ToeicScrape(scrape_data)
         elif(url_id == LIFEHACK):
@@ -63,8 +62,8 @@ with MySQLConn(account) as connect:
 
         # 各サイトからスクレイピングを行いLINEに情報を送信する。
         SC.scrapeWeb()
-        send_message = SC.sendToLine()
+        send_message = SC.returnSendMessage()
         for user in user_list:
-            line.push_message(to=user["line_id"], messages=send_message)
+            LINE.push_message(to=user["line_id"], messages=send_message)
 
     cursor.close()

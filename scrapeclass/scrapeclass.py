@@ -1,8 +1,14 @@
 from linebot import LineBotApi
 import requests
 from bs4 import BeautifulSoup as bs
+from scrapeclass.messagetype.messageenum import MessageEnum
 
 class ScrapeClass:
+    # LINEのメッセージオブジェクト作成に関するデータ
+    title = ""
+    figure_url = ""
+    content = ""
+    got_page_url = ""
 
     def __init__(self, scrape_data):
         self.base_url = scrape_data['url']
@@ -10,10 +16,15 @@ class ScrapeClass:
         self.title_sel = scrape_data['title_selector']
         self.contents_sel = scrape_data['contents_selector']
         self.res_one = requests.get(self.base_url)
-        self.soup_one = bs(self.res_one.content, "html.parser", from_encoding=content_type_encoding)
+        self.soup_one = bs(self.res_one.content, "html.parser")
 
     def scrapeWeb(self):
         pass
 
+    # LINEに送信する情報を成形する。
     def returnSendMessage(self):
-        pass
+        if self.figure_url:
+            message = MessageEnum.MESSAGE_WITH_FIGURE(self.title, self.figure_url, self.content, self.got_page_url)
+        else:
+            message = MessageEnum.MESSAGE_WITHOUT_FIGURE(self.title, self.content, self.got_page_url)
+        return message
