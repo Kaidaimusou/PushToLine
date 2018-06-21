@@ -6,6 +6,7 @@ from scrapeclass.toeicscrape import ToeicScrape
 from scrapeclass.yahooscrape import YahooScrape
 from linebot import LineBotApi
 
+# DBにアクセスするための情報
 account = {
     "db": "webapp",
     "host": "localhost",
@@ -32,6 +33,7 @@ LIFEHACK = 3
 # LINEに接続する。
 LINE = LineBotApi(channel_access_token=ACCESS_TOKEN)
 
+# MYSQLに接続し情報を取得する。
 with MySQLConn(account) as connect:
     cursor = connect.cursor(dictionary=True)
 

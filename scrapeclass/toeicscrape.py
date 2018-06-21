@@ -7,6 +7,7 @@ from linebot.models import TextSendMessage
 # TOEIC日替わり問題を送信するためのクラス
 class ToeicScrape(ScrapeClass):
 
+    # コンストラクタ、親クラスに情報を渡し、スクレイピングするための情報をフィールドに格納する。
     def __init__(self, scrape_data):
        super().__init__(scrape_data)
 

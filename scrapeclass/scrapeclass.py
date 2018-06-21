@@ -10,6 +10,7 @@ class ScrapeClass:
     content = ""
     got_page_url = ""
 
+    # 共通で使うスクレイピングのデータを格納する。
     def __init__(self, scrape_data):
         self.base_url = scrape_data['url']
         self.url_sel = scrape_data['url_selector']
@@ -23,6 +24,7 @@ class ScrapeClass:
 
     # LINEに送信する情報を成形する。
     def returnSendMessage(self):
+        # ページに画像が存在するかでメッセージテンプレートを選択する。
         if self.figure_url:
             message = MessageEnum.MESSAGE_WITH_FIGURE(self.title, self.figure_url, self.content, self.got_page_url)
         else:
