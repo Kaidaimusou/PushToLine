@@ -1,6 +1,6 @@
 from enum import Enum
 from linebot.models import (
-    TemplateSendMessage, ButtonsTemplate, URITemplateAction
+    TextSendMessage, TemplateSendMessage, ButtonsTemplate, URITemplateAction
 )
 
 # めーせーじテンプレートを列挙型で定義
