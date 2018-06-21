@@ -1,8 +1,9 @@
-from scrapeclass.scrapeclass import ScrapeClass
-from bs4 import BeautifulSoup as bs
 import requests
+from bs4 import BeautifulSoup as bs
 from urllib.parse import urljoin
 from linebot.models import TextSendMessage
+
+from scrapeclass.scrapeclass import ScrapeClass
 
 # TOEIC日替わり問題を送信するためのクラス
 class ToeicScrape(ScrapeClass):

@@ -1,10 +1,13 @@
 import os
 from dotenv import load_dotenv
+
+from linebot import LineBotApi
+
 from sqlconn.mysqlconn import MySQLConn
 from scrapeclass.lifehackerscrape import LifeHackerScrape
 from scrapeclass.toeicscrape import ToeicScrape
 from scrapeclass.yahooscrape import YahooScrape
-from linebot import LineBotApi
+from scrapeclass.messagetype.messageenum import MessageEnum
 
 # DBにアクセスするための情報
 account = {
@@ -63,8 +66,12 @@ with MySQLConn(account) as connect:
             SC = LifeHackerScrape(scrape_data)
 
         # 各サイトからスクレイピングを行いLINEに情報を送信する。
-        SC.scrapeWeb()
-        send_message = SC.returnSendMessage()
+        try:
+            SC.scrapeWeb()
+            send_message = SC.returnSendMessage()
+        except:
+            send_message = MessageEnum.MESSAGE_ERROR
+
         for user in user_list:
             LINE.push_message(to=user["line_id"], messages=send_message)
 

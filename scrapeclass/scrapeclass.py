@@ -1,6 +1,7 @@
-from linebot import LineBotApi
 import requests
 from bs4 import BeautifulSoup as bs
+from linebot import LineBotApi
+
 from scrapeclass.messagetype.messageenum import MessageEnum
 
 class ScrapeClass:

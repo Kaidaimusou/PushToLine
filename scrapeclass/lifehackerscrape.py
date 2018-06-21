@@ -1,7 +1,8 @@
-from scrapeclass.scrapeclass import ScrapeClass
-from bs4 import BeautifulSoup as bs
 import requests
+from bs4 import BeautifulSoup as bs
 from urllib.parse import urljoin
+
+from scrapeclass.scrapeclass import ScrapeClass
 
 # LifeHackerの情報をLINEに送信するためのクラス
 class LifeHackerScrape(ScrapeClass):
@@ -18,7 +19,7 @@ class LifeHackerScrape(ScrapeClass):
     # LINEに送信するための情報を取得するクラス
     def scrapeWeb(self):
         # 相対URLの取得
-        url_ref = self.soup_one.select_one(self.url_sel)[self.hiera].attrs['href']
+        url_ref = self.soup_one.select(self.url_sel)[self.hiera].attrs['href']
 
         # 絶対URLの生成
         self.got_page_url = urljoin(self.base_url, url_ref)
@@ -38,5 +39,7 @@ class LifeHackerScrape(ScrapeClass):
             self.content = soup.select_one(self.contents_sel).text
         except AttributeError:
             self.hiera += 1
+            if self.hiera == 3:
+                return
             self.scrapeWeb()
             return

@@ -36,3 +36,7 @@ class MessageEnum(Enum):
                 ]
             )
         )
+
+    MESSAGE_ERROR = TextSendMessage(
+            text = "本日はメンテナンス中です。\nご迷惑をおかけしております。"
+        )

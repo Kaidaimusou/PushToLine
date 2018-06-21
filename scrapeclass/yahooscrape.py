@@ -1,6 +1,7 @@
-from scrapeclass.scrapeclass import ScrapeClass
-from bs4 import BeautifulSoup as bs
 import requests
+from bs4 import BeautifulSoup as bs
+
+from scrapeclass.scrapeclass import ScrapeClass
 
 # YahooNewsの情報を送信するクラス
 class YahooScrape(ScrapeClass):
@@ -45,5 +46,7 @@ class YahooScrape(ScrapeClass):
             self.content = soup_three.select_one("p.ynDetailText").text
         except AttributeError:
             self.hiera += 1
+            if self.hiera == 3:
+                return
             self.scrapeWeb()
             return
